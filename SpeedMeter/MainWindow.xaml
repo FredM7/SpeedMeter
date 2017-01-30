@@ -5,22 +5,22 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SpeedMeter"
         mc:Ignorable="d"
-        Title="MainWindow" 
-        Height="70" 
+        Title="SpeedMeter" 
+        Height="210"
         Width="325"
         WindowStyle="None"
         ResizeMode="NoResize"
         Background="Transparent"
         WindowStartupLocation="Manual"
         AllowsTransparency="True" 
-        MouseDown="Window_MouseDown">
+        MouseDown="Window_MouseDown" Loaded="Window_Loaded">
     <Window.Resources>
         <Style TargetType="ToggleButton" x:Key="SmallButtonTop">
             <Setter Property="Cursor" Value="Hand" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ToggleButton">
-                        <Border CornerRadius="0,0,5,5" Background="#303030" />
+                        <Border CornerRadius="5" Background="#303030" />
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -30,7 +30,19 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ToggleButton">
-                        <Border CornerRadius="5,5,0,0" Background="#303030" />
+                        <Border CornerRadius="5" Background="#303030" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="Button" x:Key="RefreshButton">
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border CornerRadius="10" Background="#303030" Padding="3" ToolTip="Refresh IP List">
+                            <Image Visibility="Visible"  Source="/Icons/refresh-16.png"/>
+                        </Border>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -45,13 +57,15 @@
         <Border.ContextMenu>
             <ContextMenu Width="200">
                 <MenuItem IsCheckable="True" Header="Top most" Name="mnuTopMost" Checked="mnuTopMost_Checked"/>
-                <MenuItem IsCheckable="True" Header="Run At Startup" Name="mnuRunAtStartup" Checked="mnuRunAtStartup_Checked"/>
+                <MenuItem IsCheckable="True" Header="Run At Startup" Name="mnuRunAtStartup" Checked="mnuRunAtStartup_Checked" Unchecked="mnuRunAtStartup_Unchecked"/>
+                <MenuItem IsCheckable="False" Header="Exit" Name="mnuExit" Click="mnuExit_Click"/>
             </ContextMenu>
         </Border.ContextMenu>
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="25"/>
                 <RowDefinition Height="25"/>
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="30"/>
@@ -83,10 +97,42 @@
             <TextBlock Grid.Row="1" Grid.Column="5" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" Text="00.00" Name="lblDownloadTotal"/>
             <TextBlock Grid.Row="1" Grid.Column="6" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" Text="B/s" Name="lblDownloadTotalUnit"/>
             
+            <!-- Buttons -->
+
+            <ToggleButton Style="{StaticResource SmallButtonTop}" VerticalAlignment="Center" Grid.Row="0" Grid.Column="3" Height="10" Width="10" ToolTip="Run Applications"/>
+            <ToggleButton Name="btnIPAddresses" IsChecked="False" Style="{StaticResource SmallButtonBottom}" VerticalAlignment="Center" Grid.Row="1" Grid.Column="3" Height="10" Width="10" ToolTip="Show IP Addresses" Checked="btnIPAddresses_Checked" Unchecked="btnIPAddresses_Unchecked"/>
+
             <!-- =================================================== -->
 
-            <ToggleButton Style="{StaticResource SmallButtonTop}" VerticalAlignment="Top" Grid.Row="0" Grid.Column="3" Height="7" Width="10"/>
-            <ToggleButton Style="{StaticResource SmallButtonBottom}" VerticalAlignment="Bottom" Grid.Row="1" Grid.Column="3" Height="7" Width="10"/>
+            <DockPanel Name="dockPanel" Grid.Row="3" Grid.ColumnSpan="7">
+                <Border DockPanel.Dock="Top" BorderThickness="0 1 0 0" BorderBrush="#303030">
+                        <DockPanel Height="auto">
+                            <Button DockPanel.Dock="Right" Name="btnRefreshIPAddresses" Click="btnRefreshIPAddresses_Click" Style="{StaticResource RefreshButton}" Margin="3" Height="20" Width="20"></Button>
+                            <StackPanel></StackPanel>
+                        </DockPanel>
+                    </Border>
+                <DockPanel DockPanel.Dock="Bottom" Height="20">
+                    <TextBlock DockPanel.Dock="Left" VerticalAlignment="Center">Finished in:</TextBlock>
+                    <TextBlock DockPanel.Dock="Left" VerticalAlignment="Center" Name="lblFinishedTime">0s</TextBlock>
+                    <TextBlock DockPanel.Dock="Right" VerticalAlignment="Center" Name="lblIPCount">0</TextBlock>
+                    <TextBlock DockPanel.Dock="Right" VerticalAlignment="Center">Amount of IP's:</TextBlock>
+                    <StackPanel></StackPanel>
+                </DockPanel>
+                <ScrollViewer HorizontalScrollBarVisibility="Auto">
+                    <DataGrid Name="grdIPAddresses"
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True"
+                              Width="288"
+                              RowHeaderWidth="0"
+                              SelectionMode="Single">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding Name}" Header="Name"/>
+                            <DataGridTextColumn Binding="{Binding IPAddress}" Header="IP Address" Width="*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </ScrollViewer>
+            </DockPanel>
+
         </Grid>
     </Border>
 </Window>

@@ -12,3 +12,17 @@ c:\users\frederik\documents\visual studio 2015\Projects\SpeedMeter\SpeedMeter\ob
 c:\users\frederik\documents\visual studio 2015\Projects\SpeedMeter\SpeedMeter\obj\Debug\SpeedMeter.csproj.GenerateResource.Cache
 c:\users\frederik\documents\visual studio 2015\Projects\SpeedMeter\SpeedMeter\obj\Debug\SpeedMeter.exe
 c:\users\frederik\documents\visual studio 2015\Projects\SpeedMeter\SpeedMeter\obj\Debug\SpeedMeter.pdb
+C:\Users\frederik\Desktop\SpeedMeter\SpeedMeter\bin\Debug\SpeedMeter.exe.config
+C:\Users\frederik\Desktop\SpeedMeter\SpeedMeter\obj\Debug\SpeedMeter.exe
+C:\Users\frederik\Desktop\SpeedMeter\SpeedMeter\obj\Debug\SpeedMeter.pdb
+C:\Users\frederik\Desktop\SpeedMeter\SpeedMeter\bin\Debug\SpeedMeter.exe
+C:\Users\frederik\Desktop\SpeedMeter\SpeedMeter\bin\Debug\SpeedMeter.pdb
+C:\Users\frederik\Desktop\SpeedMeter\SpeedMeter\obj\Debug\MainWindow.g.cs
+C:\Users\frederik\Desktop\SpeedMeter\SpeedMeter\obj\Debug\App.g.cs
+C:\Users\frederik\Desktop\SpeedMeter\SpeedMeter\obj\Debug\SpeedMeter_MarkupCompile.cache
+C:\Users\frederik\Desktop\SpeedMeter\SpeedMeter\obj\Debug\SpeedMeter_MarkupCompile.lref
+C:\Users\frederik\Desktop\SpeedMeter\SpeedMeter\obj\Debug\MainWindow.baml
+C:\Users\frederik\Desktop\SpeedMeter\SpeedMeter\obj\Debug\SpeedMeter.g.resources
+C:\Users\frederik\Desktop\SpeedMeter\SpeedMeter\obj\Debug\SpeedMeter.Properties.Resources.resources
+C:\Users\frederik\Desktop\SpeedMeter\SpeedMeter\obj\Debug\SpeedMeter.csproj.GenerateResource.Cache
+C:\Users\frederik\Desktop\SpeedMeter\SpeedMeter\obj\Debug\SpeedMeter.csprojResolveAssemblyReference.cache
