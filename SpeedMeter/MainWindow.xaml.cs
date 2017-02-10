@@ -7,18 +7,10 @@ using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
-using System.Text;
+using System.Runtime.InteropServices;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
 
 namespace SpeedMeter
@@ -46,6 +38,15 @@ namespace SpeedMeter
         private List<Computers> _lsActiveIPAddresses = new List<Computers>();
 
         BackgroundWorker _backgroundWorker = new BackgroundWorker();
+
+        #endregion
+
+        #region DLLImports
+
+        [DllImport("iphlpapi.dll", SetLastError = true)]
+        static extern int GetBestInterface(UInt32 DestAddr, out UInt32 BestIfIndex);
+        [DllImport("iphlpapi.dll", CharSet = CharSet.Ansi)]
+        public static extern int GetAdaptersInfo(IntPtr pAdapterInfo, ref Int64 pBufOutLen);
 
         #endregion
 
@@ -227,27 +228,52 @@ namespace SpeedMeter
 
         private void GetBestInterface()
         {
+            UInt32 interfaceindex;
+
+            IPHostEntry hostInfo = Dns.GetHostEntry("www.google.com");
+            IPAddress ipv4Address = (from thisAddress in hostInfo.AddressList where thisAddress.AddressFamily == AddressFamily.InterNetwork select thisAddress).FirstOrDefault();
+            UInt32 ipv4AddressAsUInt32 = BitConverter.ToUInt32(ipv4Address.GetAddressBytes(), 0);
+            int bestInterfaceIndex = GetBestInterface(ipv4AddressAsUInt32, out interfaceindex);
+
             foreach (NetworkInterface ni in NetworkInterface.GetAllNetworkInterfaces())
             {
-                if (ni.OperationalStatus == OperationalStatus.Up 
-                    && ni.NetworkInterfaceType == NetworkInterfaceType.Ethernet 
-                    && ni.NetworkInterfaceType != NetworkInterfaceType.Wireless80211)
+                //if (ni.OperationalStatus == OperationalStatus.Up 
+                //    && ni.NetworkInterfaceType == NetworkInterfaceType.Ethernet 
+                //    && ni.NetworkInterfaceType != NetworkInterfaceType.Wireless80211)
+                //{
+                //    _networkInterface = ni;
+                //    //_interfaceStats = _networkInterface.GetIPStatistics();
+                //    _interfaceStats = _networkInterface.GetIPv4Statistics();
+
+                //    long upload = _interfaceStats.BytesSent;
+                //    long download = _interfaceStats.BytesReceived;
+
+                //    _previousUpload = upload;
+                //    _previousDownload = download;
+
+                //    //lblUploadTotal.Text = upload.ToString();
+                //    //lblDownloadTotal.Text = download.ToString();
+
+                //    break;
+                //}
+
+                try
                 {
-                    _networkInterface = ni;
-                    //_interfaceStats = _networkInterface.GetIPStatistics();
-                    _interfaceStats = _networkInterface.GetIPv4Statistics();
+                    int index = ni.GetIPProperties().GetIPv4Properties().Index;
+                    if (interfaceindex == index)
+                    {
+                        _networkInterface = ni;
+                        _interfaceStats = _networkInterface.GetIPv4Statistics();
 
-                    long upload = _interfaceStats.BytesSent;
-                    long download = _interfaceStats.BytesReceived;
+                        long upload = _interfaceStats.BytesSent;
+                        long download = _interfaceStats.BytesReceived;
 
-                    _previousUpload = upload;
-                    _previousDownload = download;
-
-                    //lblUploadTotal.Text = upload.ToString();
-                    //lblDownloadTotal.Text = download.ToString();
-
-                    break;
+                        _previousUpload = upload;
+                        _previousDownload = download;
+                        break;
+                    }
                 }
+                catch { } //Sometimes there's a stupid fucking adapter that breaks on some machines when looping. This way, we enable the loop to continue. We don't care shit about the error.
             }
         }
 
